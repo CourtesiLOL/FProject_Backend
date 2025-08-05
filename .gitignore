@@ -38,3 +38,4 @@ build/
 *.class
 *.env
 *.ENV
+nb-configuration.xml
