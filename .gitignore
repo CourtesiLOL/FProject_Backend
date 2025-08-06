@@ -39,4 +39,4 @@ build/
 *.env
 *.ENV
 nb-configuration.xml
-secure.properties
+src/main/resources/secure.properties
