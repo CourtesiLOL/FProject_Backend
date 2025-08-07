@@ -4,6 +4,7 @@ import com.fproject.FProject.model.dto.LoginUser;
 import com.fproject.FProject.model.dto.RegisterUser;
 import com.fproject.FProject.service.AuthService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author javier
  */
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("api/auth") 
+@CrossOrigin(origins = "*") // Permitir todos los orígenes
 public class AuthController {
 
     private final AuthService authService;

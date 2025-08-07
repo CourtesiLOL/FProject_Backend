@@ -23,10 +23,10 @@ public class AuthService {
 
     public ResponseEntity login(LoginUser loginUser) {
         var user = userRepo.findByEmail(loginUser.email());
-        if (user == null) return ResponseEntity.status(NOT_FOUND).body("Error: This user not exist");
+        if (user == null) return ResponseEntity.status(UNAUTHORIZED).body("User or Password incorrect");
         
         if (!user.getPassword().equals(loginUser.password())) {
-            return ResponseEntity.status(UNAUTHORIZED).body("Error: incorrect password");
+            return ResponseEntity.status(UNAUTHORIZED).body("User or Password incorrect");
         }
         
         //TO-DO Implement generation token
@@ -38,7 +38,7 @@ public class AuthService {
         if (userRepo.findByEmail(regUser.email()) != null) {
             return ResponseEntity
                     .status(CONFLICT)
-                    .body("Error: This user already exist");
+                    .body(null);
         }
         
         var newUser = new UserEntity();
