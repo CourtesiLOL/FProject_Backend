@@ -38,5 +38,6 @@ build/
 *.class
 *.env
 *.ENV
+*.pem
 nb-configuration.xml
 src/main/resources/secure.properties
