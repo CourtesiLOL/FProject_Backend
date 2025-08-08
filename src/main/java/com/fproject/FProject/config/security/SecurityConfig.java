@@ -1,6 +1,5 @@
 package com.fproject.FProject.config.security;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +19,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
     /**
      * Configura los filtros de seguridad HTTP. - Permite acceso sin
      * autenticación a ciertos recursos como CSS, JS y la página de portfolio. -
@@ -36,7 +41,9 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/auth/**", "/").permitAll()
                 // Requiere autenticación para cualquier otra petición
                 .anyRequest().authenticated())
-                .logout((logout) -> logout.permitAll()); // Permite el logout sin autenticación
+                .logout((logout) -> logout.permitAll()) // Permite el logout sin autenticación
+                        // Añadir el filtro de autenticación JWT y lo posicionamos antes de UsernamePasswordAuthenticationFilter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Permite el logout sin autenticación
 
         return http.build(); // Devuelve la configuración de seguridad construida
 
