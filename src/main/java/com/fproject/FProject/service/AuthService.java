@@ -1,7 +1,7 @@
 package com.fproject.FProject.service;
 
-import com.fproject.FProject.model.dto.LoginUser;
-import com.fproject.FProject.model.dto.RegisterUser;
+import com.fproject.FProject.model.dto.requestBody.LoginUser;
+import com.fproject.FProject.model.dto.requestBody.RegisterUser;
 import com.fproject.FProject.model.entity.UserEntity;
 import com.fproject.FProject.repositorie.UserRepository;
 import org.springframework.http.ResponseEntity;
