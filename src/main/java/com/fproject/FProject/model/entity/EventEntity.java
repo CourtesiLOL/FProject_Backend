@@ -36,12 +36,8 @@ public class EventEntity {
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
     private Set<ImageEntity> images;
 
-    // @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
-    // private Set<VotingEntity> votings;
-
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
-    private Set<OptionEntity> option;
-
+    private Set<ElectionEntity> election;
 
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
     private Set<MemberEntity> members;

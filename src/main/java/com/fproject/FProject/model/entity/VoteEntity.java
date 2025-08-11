@@ -21,8 +21,8 @@ public class VoteEntity {
     private UserEntity userId;
     
     @ManyToOne
-    @MapsId("optionId")
-    @JoinColumn(name = "optionId", nullable = false)
-    private EventEntity optionId;
+    @MapsId("electionId")
+    @JoinColumn(name = "electionId", nullable = false)
+    private ElectionEntity electionId;
 
 }

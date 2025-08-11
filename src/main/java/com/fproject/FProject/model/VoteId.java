@@ -6,17 +6,17 @@ import jakarta.persistence.Embeddable;
 public class VoteId {
 
     private long userId;
-    private long optionId;
+    private long electionId;
 
     public VoteId() {
     }
 
-    public long getOptionId() {
-        return optionId;
+    public long getelectionId() {
+        return electionId;
     }
 
-    public void setOptionId(long optionId) {
-        this.optionId = optionId;
+    public void setelectionId(long electionId) {
+        this.electionId = electionId;
     }
 
     public long getUserId() {

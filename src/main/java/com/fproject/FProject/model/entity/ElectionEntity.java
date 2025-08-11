@@ -1,38 +1,50 @@
 package com.fproject.FProject.model.entity;
 
-import com.fproject.FProject.model.OptionId;
+import com.fproject.FProject.model.electionId;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
-@Table(name = "Option")
-public class OptionEntity {
-     
-    @EmbeddedId
-    private OptionId id;
-    
+@Table(name = "Election")
+public class ElectionEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     @ManyToOne
-    @MapsId("eventId")
     @JoinColumn(name = "eventId", nullable = false)
     private EventEntity eventId;
-    
+
     @Column(nullable = false)
     private LocalDateTime dateTime;
-    
+
     @Column(nullable = false)
     private int count;
-    
-    public OptionEntity() {
-        
+
+    // ----------------------------------------------
+
+    @OneToMany(mappedBy = "electionId", cascade = CascadeType.ALL)
+    private Set<VoteEntity> vote;
+
+    // ----------------------------------------------
+    public ElectionEntity() {
+
     }
 
-    public OptionId getId() {
+    public long getId() {
         return id;
     }
 
@@ -55,7 +67,4 @@ public class OptionEntity {
     public void setCount(int count) {
         this.count = count;
     }
-    
-    
-    
 }

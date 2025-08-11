@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 @Table(name = "Image")
 public class ImageEntity {
     
+    //if not work change to OneToMany
     @Id
     @OneToOne
     @JoinColumn(name = "eventId", nullable = false)
