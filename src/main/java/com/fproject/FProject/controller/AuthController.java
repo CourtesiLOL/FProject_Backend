@@ -1,7 +1,7 @@
 package com.fproject.FProject.controller;
 
-import com.fproject.FProject.model.dto.LoginUser;
-import com.fproject.FProject.model.dto.RegisterUser;
+import com.fproject.FProject.model.dto.requestBody.LoginUser;
+import com.fproject.FProject.model.dto.requestBody.RegisterUser;
 import com.fproject.FProject.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

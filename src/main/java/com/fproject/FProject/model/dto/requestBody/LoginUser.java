@@ -1,4 +1,4 @@
-package com.fproject.FProject.model.dto;
+package com.fproject.FProject.model.dto.requestBody;
 
 /**
  *

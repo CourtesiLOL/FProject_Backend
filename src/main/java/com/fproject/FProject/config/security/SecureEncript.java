@@ -1,7 +1,5 @@
 package com.fproject.FProject.config.security;
 
-import com.fproject.FProject.model.dto.LoginUser;
-import com.fproject.FProject.model.dto.RegisterUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

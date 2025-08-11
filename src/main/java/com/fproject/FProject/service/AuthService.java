@@ -3,8 +3,8 @@ package com.fproject.FProject.service;
 import com.fproject.FProject.config.security.JwtTokenProvider;
 import com.fproject.FProject.config.security.SecureEncript;
 import com.fproject.FProject.model.dto.JwtDTO;
-import com.fproject.FProject.model.dto.LoginUser;
-import com.fproject.FProject.model.dto.RegisterUser;
+import com.fproject.FProject.model.dto.requestBody.LoginUser;
+import com.fproject.FProject.model.dto.requestBody.RegisterUser;
 import com.fproject.FProject.model.entity.UserEntity;
 import com.fproject.FProject.repositorie.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +13,8 @@ import static org.springframework.http.HttpStatus.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+
 
 /**
  *

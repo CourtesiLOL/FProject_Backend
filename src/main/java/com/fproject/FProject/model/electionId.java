@@ -3,12 +3,12 @@ package com.fproject.FProject.model;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class VotingId {
+public class electionId {
 
+    private long electionId;
     private long eventId;
-    private long owner;
 
-    public VotingId() {
+    public electionId() {
 
     }
 
@@ -20,12 +20,14 @@ public class VotingId {
         this.eventId = eventId;
     }
 
-    public long getOwner() {
-        return owner;
+    public long getelectionId() {
+        return electionId;
     }
 
-    public void setOwner(long owner) {
-        this.owner = owner;
+    public void setelectionId(long electionId) {
+        this.electionId = electionId;
     }
+
+    
 
 }

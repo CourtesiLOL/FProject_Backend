@@ -37,7 +37,7 @@ public class EventEntity {
     private Set<ImageEntity> images;
 
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
-    private Set<VotingEntity> votings;
+    private Set<ElectionEntity> election;
 
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
     private Set<MemberEntity> members;
