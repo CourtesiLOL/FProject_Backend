@@ -6,4 +6,5 @@ import com.fproject.FProject.model.entity.MemberEntity;
 import com.fproject.FProject.model.entity.ElectionEntity;
 
 public record PageEvent(String owner,String name, String description, 
-Set<ImageEntity> images,Set<ElectionEntity> opstions, Set<MemberEntity> members) {}
+Set<ImageEntity> images,Set<ElectionEntity> opstions, 
+Set<MemberEntity> members) {}

@@ -1,0 +1,19 @@
+package com.fproject.FProject.controller;
+
+
+@RestController
+@RequestMapping("/Event")
+public class EventController{
+
+    @Autowired
+    private EventService eventService;
+
+    @GetMapping
+    public List<EventDTO> GetAllEvents(){
+        return eventService.GetAllEvents();
+    }
+
+    //@PostMapping("/create")
+
+
+}
