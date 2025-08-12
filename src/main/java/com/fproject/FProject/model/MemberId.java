@@ -11,6 +11,11 @@ public class MemberId {
     public MemberId() {
     }
 
+    public MemberId(long eventId, long userId) {
+        this.eventId = eventId;
+        this.userId = userId;
+    }
+
     public long getEventId() {
         return eventId;
     }

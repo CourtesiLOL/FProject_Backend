@@ -2,6 +2,7 @@ package com.fproject.FProject.controller;
 
 import com.fproject.FProject.service.ImageService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -40,6 +41,15 @@ public class ImageController {
         
         return imgService.addImage(eventName, imgFile, token);
         
+    }
+    
+    @GetMapping("/{imageName}")
+    public ResponseEntity getImage(
+            @PathVariable String imageName,
+            @RequestHeader("JWT") String token)
+    {
+        //Tengo que mirar como mandar bien el archivo de vuelta
+        return imgService.getImage(imageName, token);
     }
     
 }

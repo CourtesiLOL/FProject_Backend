@@ -1,16 +1,21 @@
 package com.fproject.FProject.service;
 
 import com.fproject.FProject.config.security.JwtTokenProvider;
+import com.fproject.FProject.model.MemberId;
 import com.fproject.FProject.model.entity.EventEntity;
 import com.fproject.FProject.model.entity.ImageEntity;
+import com.fproject.FProject.model.entity.MemberEntity;
 import com.fproject.FProject.model.entity.UserEntity;
 import com.fproject.FProject.repositorie.EventRepository;
 import com.fproject.FProject.repositorie.ImageRepository;
+import com.fproject.FProject.repositorie.MemberRepository;
 import com.fproject.FProject.repositorie.UserRepository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -36,17 +41,20 @@ public class ImageService {
     private final JwtTokenProvider jwtProvider;
     private final EventRepository eventRepo;
     private final UserRepository userRepo;
+    private final MemberRepository memberRepo;
     
     public ImageService(
-            ImageRepository imgRepo, 
-            JwtTokenProvider jwtProvider, 
-            EventRepository eventRepo, 
-            UserRepository userRepo) 
+            ImageRepository imgRepo,
+            JwtTokenProvider jwtProvider,
+            EventRepository eventRepo,
+            UserRepository userRepo,
+            MemberRepository memberRepo)
     {    
         this.imgRepo = imgRepo;
         this.jwtProvider = jwtProvider;
         this.eventRepo = eventRepo;
         this.userRepo = userRepo;
+        this.memberRepo = memberRepo;
         this.fileName = new StringBuilder();
     }
     
@@ -73,8 +81,6 @@ public class ImageService {
             count++;
             
             fileName.setLength(0);
-            fileName.append(directory.toAbsolutePath());
-            fileName.append(File.separator);
             fileName.append("img-");
             fileName.append(event.getName());
             fileName.append("-");
@@ -83,8 +89,10 @@ public class ImageService {
             String imgName = fileName.toString();
             
             System.out.println("New name: "+imgName);
+            System.out.println("path: "+directory);
+            System.out.println(directory + imgName);
             
-            directory = Path.of(imgName);
+            directory = Path.of(directory + File.separator + imgName);
             Files.write(directory, file.getBytes());
             
             if (!Files.exists(directory)) 
@@ -92,10 +100,11 @@ public class ImageService {
                     .body("ERROR: The server can't save the image"); 
             
             var img = new ImageEntity();
-            img.setEventId(event);
-            img.setName(directory.toString());
-            imgRepo.save(img);
             
+            img.setEventId(event);
+            img.setName(imgName);
+            imgRepo.save(img);
+
             return ResponseEntity.ok("Image uploaded succesfully");   
         } catch(IOException ex) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR)
@@ -103,5 +112,38 @@ public class ImageService {
         }
     }
     
+    public ResponseEntity getImage(String imageName, String token) {
+        
+        ImageEntity img = imgRepo.findByName(imageName);
+        if (img == null) return ResponseEntity.status(NOT_FOUND).body(null);
+        
+        EventEntity imgEvent = img.getEventId();
+        UserEntity user = userRepo.findByEmail(jwtProvider.getUsername(token));
+        
+        MemberEntity mem = memberRepo.findById(new MemberId(
+                imgEvent.getId(),
+                user.getId()
+        ));
+            
+        
+        if (mem != null || imgEvent.getOwner() == user.getId()) {
+            try {
+                
+                Path imgPath = Path.of(uploadDir + File.separator +img.getName());
+                if (!Files.exists(imgPath)) {
+                    System.out.println("Error: this file not exist");
+                    return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(null);
+                }
+                    
+                return ResponseEntity.ok(Files.readAllBytes(imgPath));
+                
+            } catch (IOException ex) {
+                System.out.println("Error: IOException");
+                return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(null);
+            }
+        }
+        
+        return ResponseEntity.status(NOT_FOUND).body(null);
+    }
     
 }

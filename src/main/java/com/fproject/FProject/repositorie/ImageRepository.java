@@ -14,5 +14,6 @@ public interface ImageRepository extends JpaRepository<ImageEntity, Long> {
     
     // Método para contar imágenes por el ID del evento
     long countByEventId(EventEntity eventId);
+    ImageEntity findByName(String name);
     
 }
