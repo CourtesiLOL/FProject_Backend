@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -17,7 +18,7 @@ public class ImageEntity {
     
     //if not work change to OneToMany
     @Id
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "eventId", nullable = false)
     private EventEntity eventId;
     

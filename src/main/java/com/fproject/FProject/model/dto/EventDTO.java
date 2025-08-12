@@ -2,4 +2,11 @@ package com.fproject.FProject.model.dto;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public record EventDTO(String owner,String name, String description,Set<LocalDateTime> date) {}
+import com.fproject.FProject.model.entity.UserEntity;
+
+public record EventDTO(UserEntity owner,String name, String description,Set<LocalDateTime> date) {
+
+    public Set<LocalDateTime> getDates(){
+        return date;
+    }
+}
