@@ -39,5 +39,13 @@ build/
 *.env
 *.ENV
 *.pem
+
+*.png
+*.PNG
+*.jpg
+*.JPG
+*.webp
+*.WEBP
+
 nb-configuration.xml
 src/main/resources/secure.properties

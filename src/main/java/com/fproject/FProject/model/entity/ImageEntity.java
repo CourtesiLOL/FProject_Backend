@@ -2,8 +2,11 @@ package com.fproject.FProject.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -15,9 +18,11 @@ import jakarta.persistence.Table;
 @Table(name = "Image")
 public class ImageEntity {
     
-    //if not work change to OneToMany
     @Id
-    @OneToOne
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Generación automática del ID
+    private Long id; // Campo ID
+    
+    @ManyToOne
     @JoinColumn(name = "eventId", nullable = false)
     private EventEntity eventId;
     
@@ -36,6 +41,14 @@ public class ImageEntity {
         return name;
     }
 
+    public long getId() {
+        return this.id;
+    }
+    
+    public void setId(long id) {
+        this.id = id;
+    }
+    
     public void setEventId(EventEntity eventId) {
         this.eventId = eventId;
     }

@@ -48,7 +48,7 @@ public class AuthService {
         }
         
         //TO-DO Implement generation token
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword());
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         
         return ResponseEntity.ok(new JwtDTO(
                 jwtProvider.generateToken(auth)
@@ -82,7 +82,7 @@ public class AuthService {
         String lower = password.toLowerCase();
         
         //Cumple la longitud
-        if (length >= maxPasslen || length <= minPasslen) return false;
+        if (length > maxPasslen || length < minPasslen) return false;
         
         // Comprobar patrones comunes de SQL Injection
         if (lower.contains("select") ||
