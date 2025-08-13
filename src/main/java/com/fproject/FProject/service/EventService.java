@@ -1,9 +1,11 @@
 package com.fproject.FProject.service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +18,10 @@ import com.fproject.FProject.model.entity.EventEntity;
 import com.fproject.FProject.model.entity.UserEntity;
 import com.fproject.FProject.repositorie.ElectionRepository;
 import com.fproject.FProject.repositorie.EventRepository;
+import com.fproject.FProject.repositorie.MemberRepository;
 import com.fproject.FProject.repositorie.UserRepository;
 import com.fproject.FProject.model.entity.ImageEntity;
+import org.springframework.beans.factory.annotation.Value;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -27,14 +31,33 @@ public class EventService {
 
     private EventRepository eventRepository;
     private ElectionRepository electionRepository;
-    private UserRepository userRepository;
+    private UserRepository userRepository; 
+    private MemberRepository memberRepository;
     private JwtTokenProvider jwt;
 
+    @Value("${characters.for.code}")
+    private String charactersSC;
+
+    @Value("${shareCode.character.long}")
+    private byte maxLongSC;
+
+    private String generatorSC(){
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder codigo = new StringBuilder(maxLongSC);
+        for (int i = 0; i < maxLongSC; i++) {
+            int indice = random.nextInt(charactersSC.length());
+            codigo.append(charactersSC.charAt(indice));
+        }
+        return codigo.toString();
+    }
+    
     public EventService(EventRepository eventRepository, ElectionRepository electionRepository,
-            UserRepository userRepository, JwtTokenProvider jwt) {
+            UserRepository userRepository,MemberRepository memberRepository, JwtTokenProvider jwt) {
         this.eventRepository = eventRepository;
         this.electionRepository = electionRepository;
         this.userRepository = userRepository;
+        this.memberRepository = memberRepository;
         this.jwt = jwt;
     }
 
@@ -52,7 +75,7 @@ public class EventService {
         eventNew.setOwner(user);
         eventNew.setName(event.name());
         eventNew.setDescription(event.description());
-        eventNew.setShareCode("qwertyuiop");
+        eventNew.setShareCode(generatorSC());
         eventNew = eventRepository.save(eventNew);
 
         
@@ -71,7 +94,7 @@ public class EventService {
         return ResponseEntity.ok(null);
     }
 
-    public ResponseEntity getMyEvents(String token) {
+    public ResponseEntity getMyOunEvents(String token) {
 
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);
@@ -89,9 +112,6 @@ public class EventService {
                 for (ImageEntity e : event.getImages()) {
                     images.add(ImageDTO.ofEntity(e));
                 }
-                
-                
-                // DTO.images(imageRepository.findAllBy);
                 HomeEventDTO DTO = new HomeEventDTO(
                         event.getName(),
                         event.getDescription(),
@@ -107,4 +127,38 @@ public class EventService {
         }
         return ResponseEntity.status(NOT_FOUND).body(null);
     }
+
+    public ResponseEntity getMyEvents(String token){
+        String mail = jwt.getUsername(token);
+        UserEntity user = userRepository.findByEmail(mail);
+        
+        //Set<EventEntity> events = eventRepository.findAllByOwner(user);
+        Set<EventEntity> events = user.getEvents();
+        System.out.println(events.size());
+        events.size();
+        if (!events.isEmpty()) {
+            Set<HomeEventDTO> DTOs = new LinkedHashSet();
+            
+            for (EventEntity event : events) {
+
+                Set<ImageDTO> images = new LinkedHashSet();
+                for (ImageEntity e : event.getImages()) {
+                    images.add(ImageDTO.ofEntity(e));
+                }
+                HomeEventDTO DTO = new HomeEventDTO(
+                        event.getName(),
+                        event.getDescription(),
+                        images,
+                        event.getElection(),
+                        event.getMembers());
+
+                DTOs.add(DTO);
+            }
+            
+
+            return ResponseEntity.ok(DTOs);
+        }
+        return ResponseEntity.status(NOT_FOUND).body(null);
+    }
+
 }

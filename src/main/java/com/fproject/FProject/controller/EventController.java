@@ -22,9 +22,9 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping
-    public ResponseEntity getMyEvents(@RequestHeader("JWT") String token) {
-        return eventService.getMyEvents(token);
+    @GetMapping("/ounEvents")
+    public ResponseEntity getMyOunEvents(@RequestHeader("JWT") String token) {
+        return eventService.getMyOunEvents(token);
     }
 
     @PostMapping("/create")
