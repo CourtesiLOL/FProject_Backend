@@ -161,4 +161,9 @@ public class EventService {
         return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
+    public ResponseEntity joinEvent(String token, String shareCode){
+
+
+        return ResponseEntity.ok(null);
+    }
 }
