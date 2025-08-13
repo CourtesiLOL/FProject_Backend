@@ -75,4 +75,20 @@ public class UserEntity {
         this.password = password;
     }
 
+    public Set<EventEntity> getEvents() {
+        return events;
+    }
+
+    public Set<MemberEntity> getMembers() {
+        return members;
+    }
+
+    public Set<CommentEntity> getComments() {
+        return comments;
+    }
+
+    public Set<VoteEntity> getVote() {
+        return vote;
+    }
+
 }

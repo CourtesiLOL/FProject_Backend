@@ -15,7 +15,7 @@ public class MemberId {
         this.eventId = eventId;
         this.userId = userId;
     }
-
+    
     public long getEventId() {
         return eventId;
     }

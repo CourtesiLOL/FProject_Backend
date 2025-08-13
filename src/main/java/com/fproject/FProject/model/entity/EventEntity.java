@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "owner", nullable = false)
     private UserEntity owner;
 
@@ -87,6 +87,24 @@ public class EventEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+
+    public Set<ImageEntity> getImages() {
+        return images;
+    }
+
+    public Set<ElectionEntity> getElection() {
+        return election;
+    }
+
+    public Set<MemberEntity> getMembers() {
+        return members;
+    }
+
+    public Set<CommentEntity> getComments() {
+        return comments;
     }
 
 }
