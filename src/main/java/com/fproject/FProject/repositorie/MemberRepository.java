@@ -8,6 +8,5 @@ import com.fproject.FProject.model.entity.EventEntity;
 import com.fproject.FProject.model.entity.MemberEntity;
 
 public interface MemberRepository extends JpaRepository<MemberEntity, MemberId>{
-
-    Set<MemberEntity> findAllByEvent(EventEntity eventId);
+    //Set<MemberEntity> findAllByEvent(EventEntity eventId);
 }

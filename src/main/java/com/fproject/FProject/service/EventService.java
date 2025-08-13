@@ -1,9 +1,12 @@
 package com.fproject.FProject.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,10 @@ import com.fproject.FProject.repositorie.ElectionRepository;
 import com.fproject.FProject.repositorie.EventRepository;
 import com.fproject.FProject.repositorie.MemberRepository;
 import com.fproject.FProject.repositorie.UserRepository;
+import com.fproject.FProject.model.MemberId;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.CONFLICT;
 
 @Service
 public class EventService {
@@ -25,59 +32,78 @@ public class EventService {
     private ElectionRepository electionRepository;
     private UserRepository userRepository;
     private MemberRepository memberRepository;
-//    private Imagepository imageRepository;
-
     private JwtTokenProvider jwt;
 
-    public ResponseEntity createEvent(EventDTO event){
+    public EventService(EventRepository eventRepository, ElectionRepository electionRepository,
+            UserRepository userRepository, MemberRepository memberRepository, JwtTokenProvider jwt) {
+        this.eventRepository = eventRepository;
+        this.electionRepository = electionRepository;
+        this.userRepository = userRepository;
+        this.memberRepository = memberRepository;
+        this.jwt = jwt;
+    }
+
+    public ResponseEntity createEvent(String token, EventDTO event) {
+
+        String mail = jwt.getUsername(token);
+        UserEntity user = userRepository.findByEmail(mail);
+
+        if (eventRepository.findByOwnerAndName(user, event.name()) != null)
+            return ResponseEntity.status(CONFLICT).body(null);
 
         EventEntity eventNew = new EventEntity();
-        ElectionEntity electionNew = new ElectionEntity();
         
-        eventNew.setOwner(event.owner());
+
+        eventNew.setOwner(user);
         eventNew.setName(event.name());
         eventNew.setDescription(event.description());
         eventNew.setShareCode("qwertyuiop");
         eventNew = eventRepository.save(eventNew);
 
-        electionNew.setEventId(eventNew);
-        electionNew.setCount(0);
-       for (LocalDateTime item : event.date()) {
-        electionNew.setDateTime(item);
-        electionRepository.save(electionNew);
-       }
+        
+        ElectionEntity electionNew;
+        for (LocalDateTime item : event.date()) {
+            if (item == null)
+                continue;
+            System.out.println("Evento: "+item.toString());
+            electionNew = new ElectionEntity();
+            electionNew.setEventId(eventNew);
+            electionNew.setCount(0);
+            electionNew.setDateTime(item);
+            electionRepository.save(electionNew);
+        }
 
         return ResponseEntity.ok(null);
     }
 
-    public Set<HomeEventDTO> getMyEvents(String token){
+    public ResponseEntity getMyEvents(String token) {
 
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);
         
-        Set<EventEntity> events = eventRepository.findAllByOwner(user);
-
-        Set<HomeEventDTO> DTOs = null;
-        if (!events.isEmpty()) {   
+        //Set<EventEntity> events = eventRepository.findAllByOwner(user);
+        Set<EventEntity> events = user.getEvents();
+        System.out.println(events.size());
+        events.size();
+        if (!events.isEmpty()) {
+            Set<HomeEventDTO> DTOs = new LinkedHashSet();
+            
             for (EventEntity event : events) {
-                HomeEventDTO DTO = new HomeEventDTO(event.getName(), event.getDescription(), null, null, null);
-                
-                //DTO.images(imageRepository.findAllBy);
-                
-                DTO.elections(electionRepository.findAllByEvent(event));
 
-                DTO.members(memberRepository.findAllByEvent(event));
+                // DTO.images(imageRepository.findAllBy);
+                HomeEventDTO DTO = new HomeEventDTO(
+                        event.getName(),
+                        event.getDescription(),
+                        null,
+                        event.getElection(),
+                        event.getMembers());
 
                 DTOs.add(DTO);
             }
+            
 
-
-
+            return ResponseEntity.ok(DTOs);
         }
-
-
-
-
-        return DTOs;
+        return ResponseEntity.status(NOT_FOUND).body(null);
     }
 }

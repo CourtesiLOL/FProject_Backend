@@ -4,9 +4,6 @@ import java.util.Set;
 
 import com.fproject.FProject.model.entity.UserEntity;
 
-public record EventDTO(UserEntity owner,String name, String description,Set<LocalDateTime> date) {
+public record EventDTO(String name, String description,Set<LocalDateTime> date) {
 
-    public Set<LocalDateTime> getDates(){
-        return date;
-    }
 }

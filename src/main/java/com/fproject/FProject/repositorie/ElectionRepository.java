@@ -10,5 +10,5 @@ import com.fproject.FProject.model.entity.EventEntity;
 
 public interface ElectionRepository extends JpaRepository<ElectionEntity, Long>{
 
-    Set<ElectionEntity> findAllByEvent(EventEntity eventId);
+   // Set<ElectionEntity> findAllByEvent(EventEntity eventId);
 }
