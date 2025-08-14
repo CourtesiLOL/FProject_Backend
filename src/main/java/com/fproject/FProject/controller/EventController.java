@@ -1,6 +1,5 @@
 package com.fproject.FProject.controller;
 
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fproject.FProject.model.dto.EventDTO;
-import com.fproject.FProject.model.dto.HomeEventDTO;
 import com.fproject.FProject.service.EventService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 

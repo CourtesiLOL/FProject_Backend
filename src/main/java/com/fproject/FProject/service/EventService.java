@@ -1,6 +1,5 @@
 package com.fproject.FProject.service;
 
-import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -18,6 +17,7 @@ import com.fproject.FProject.repositorie.ElectionRepository;
 import com.fproject.FProject.repositorie.EventRepository;
 import com.fproject.FProject.repositorie.UserRepository;
 import com.fproject.FProject.model.entity.ImageEntity;
+import java.time.LocalDate;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -57,7 +57,7 @@ public class EventService {
 
         
         ElectionEntity electionNew;
-        for (LocalDateTime item : event.date()) {
+        for (LocalDate item : event.date()) {
             if (item == null)
                 continue;
             System.out.println("Evento: "+item.toString());
