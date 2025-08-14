@@ -35,6 +35,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 //Desactivamos la verificacion de sesion con las coockies
+                .cors()
+                .and()
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                 // Permite el acceso público a los recursos estáticos y a las páginas publicas

@@ -2,6 +2,7 @@ package com.fproject.FProject.controller;
 
 import com.fproject.FProject.service.ImageService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author javier
  */
 @RestController
+@CrossOrigin
 @RequestMapping("api/image")
 public class ImageController {
     

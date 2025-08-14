@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fproject.FProject.model.dto.EventDTO;
 import com.fproject.FProject.model.dto.HomeEventDTO;
 import com.fproject.FProject.service.EventService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/event")
 public class EventController {
 
