@@ -1,9 +1,12 @@
 package com.fproject.FProject.model;
 
+import java.io.Serializable;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class MemberId {
+public class MemberId implements Serializable{
 
     private long eventId;
     private long userId;
@@ -31,5 +34,6 @@ public class MemberId {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+
 
 }

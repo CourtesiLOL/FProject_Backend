@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  * @author javier
  */
 @Repository
-public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
-    MemberEntity findById(MemberId id);
+public interface MemberRepository extends JpaRepository<MemberEntity, MemberId> {
+    MemberEntity findByMemberId(MemberId memberId);
 }

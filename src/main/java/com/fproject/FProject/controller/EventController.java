@@ -35,10 +35,11 @@ public class EventController {
         return eventService.createEvent(token,event);
     }
 
-    @GetMapping("/join/{Sharecode}")
+    @PostMapping("/join/{sharecode}")
     public ResponseEntity joinEvent(
-        @RequestHeader("JWT") String token,
-        @PathVariable String shareCode) {
-        return eventService.joinEvent(token,shareCode);
+        @PathVariable String sharecode,
+        @RequestHeader("JWT") String token) 
+        {
+        return eventService.joinEvent(token,sharecode);
     }
 }
