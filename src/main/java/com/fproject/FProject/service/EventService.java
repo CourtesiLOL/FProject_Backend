@@ -169,6 +169,11 @@ public class EventService {
         if (event == null) {
             return ResponseEntity.status(NOT_FOUND).body("ERROR: not event found");
         }
+
+        if (user.getId() == event.getOwner()) {
+            return ResponseEntity.status(NOT_FOUND).body("ERROR: You are the owner");
+        }
+
         MemberId memId = new MemberId(event.getId(), user.getId());
         if (memberRepository.findByMemberId(memId) != null) {
             return ResponseEntity.status(CONFLICT).body("ERROR: this user is already member");
