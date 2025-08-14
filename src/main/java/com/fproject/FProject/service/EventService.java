@@ -100,16 +100,13 @@ public class EventService {
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);
 
-        // Set<EventEntity> events = eventRepository.findAllByOwner(user);
         Set<EventEntity> events = user.getEvents();
-        System.out.println(events.size());
-        events.size();
         if (!events.isEmpty()) {
             Set<HomeEventDTO> DTOs = new LinkedHashSet();
-
+            Set<ImageDTO> images = new LinkedHashSet();
+            
             for (EventEntity event : events) {
-
-                Set<ImageDTO> images = new LinkedHashSet();
+                images.clear();
                 for (ImageEntity e : event.getImages()) {
                     images.add(ImageDTO.ofEntity(e));
                 }
@@ -129,37 +126,34 @@ public class EventService {
         return ResponseEntity.status(NOT_FOUND).body(null);
     }
 
-    public ResponseEntity getMyEvents(String token) {
+    public ResponseEntity getMyMemberEvents(String token) {
+        
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);
+        Set<MemberEntity> members = memberRepository.findAllByUserId(user.getId());
 
-        // Set<EventEntity> events = eventRepository.findAllByOwner(user);
-        Set<EventEntity> events = user.getEvents();
-        System.out.println(events.size());
-        events.size();
-        if (!events.isEmpty()) {
-            Set<HomeEventDTO> DTOs = new LinkedHashSet();
-
-            for (EventEntity event : events) {
-
-                Set<ImageDTO> images = new LinkedHashSet();
+        if (members.isEmpty()) return ResponseEntity.ok(null);
+        
+        Set<EventEntity> events = new LinkedHashSet();
+        Set<HomeEventDTO> DTOs = new LinkedHashSet();
+        Set<ImageDTO> images = new LinkedHashSet();
+        
+        for (MemberEntity member : members) {
+            EventEntity event = eventRepository.findById(member.getMemberId().getEventId()).get();
+            images.clear();
                 for (ImageEntity e : event.getImages()) {
                     images.add(ImageDTO.ofEntity(e));
                 }
-                HomeEventDTO DTO = new HomeEventDTO(
-                        event.getName(),
-                        event.getDescription(),
-                        images,
-                        event.getElection(),
-                        null
-                        );
+            DTOs.add(new HomeEventDTO(
+                event.getName(),
+                event.getDescription(),
+                images,
+                event.getElection(),
+                memberRepository.findAllByEventId(event.getId())
+            ));
 
-                DTOs.add(DTO);
-            }
-
-            return ResponseEntity.ok(DTOs);
         }
-        return ResponseEntity.status(NOT_FOUND).body(null);
+        return ResponseEntity.ok(DTOs);
     }
 
     public ResponseEntity joinEvent(String token, String sharecode) {

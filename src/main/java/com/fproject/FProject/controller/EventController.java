@@ -23,9 +23,14 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping("/ounEvents")
+    @GetMapping("/oun-events")
     public ResponseEntity getMyOunEvents(@RequestHeader("JWT") String token) {
         return eventService.getMyOunEvents(token);
+    }
+
+    @GetMapping("/member-events")
+    public ResponseEntity getMyMemberEvents(@RequestHeader("JWT") String token) {
+        return eventService.getMyMemberEvents(token);
     }
 
     @PostMapping("/create")
