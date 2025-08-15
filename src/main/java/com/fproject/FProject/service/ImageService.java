@@ -14,12 +14,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.TOO_MANY_REQUESTS;
+import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,8 +59,10 @@ public class ImageService {
     
     public ResponseEntity addImage(String eventName, MultipartFile file, String token) {
         
-        UserEntity user = userRepo.findByEmail(jwtProvider.getUsername(token));
+        if (!file.getContentType().equals("image/webp")) 
+            return ResponseEntity.status(UNSUPPORTED_MEDIA_TYPE).body("ERROR: This format is not suported");
         
+        UserEntity user = userRepo.findByEmail(jwtProvider.getUsername(token));
         EventEntity event = eventRepo.findByOwnerAndName(user, eventName);
         if (event == null)
             return ResponseEntity.status(NOT_FOUND)
@@ -73,7 +74,7 @@ public class ImageService {
                 Files.createDirectories(directory);
             }
             
-            long count = imgRepo.count();
+            long count = imgRepo.countByEventId(event);
             
             if (count >= maxImg) 
                 return ResponseEntity.status(TOO_MANY_REQUESTS)
@@ -85,6 +86,7 @@ public class ImageService {
             fileName.append(event.getName());
             fileName.append("-");
             fileName.append(count);
+            fileName.append(".webp");
             
             String imgName = fileName.toString();
             
@@ -113,7 +115,7 @@ public class ImageService {
     }
     
     public ResponseEntity getImage(String imageName, String token) {
-        
+           
         ImageEntity img = imgRepo.findByName(imageName);
         if (img == null) return ResponseEntity.status(NOT_FOUND).body(null);
         
