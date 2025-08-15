@@ -23,6 +23,11 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    @GetMapping("/{eventName}")
+    public ResponseEntity getEvent(@RequestHeader("JWT") String token, @PathVariable String eventName) {
+        return eventService.getEvent(token, eventName);
+    }
+    
     @GetMapping("/oun-events")
     public ResponseEntity getMyOunEvents(@RequestHeader("JWT") String token) {
         return eventService.getMyOunEvents(token);

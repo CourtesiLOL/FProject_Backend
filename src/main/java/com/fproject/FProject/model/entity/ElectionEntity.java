@@ -1,10 +1,8 @@
 package com.fproject.FProject.model.entity;
 
-import com.fproject.FProject.model.electionId;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -29,7 +27,7 @@ public class ElectionEntity {
     private EventEntity eventId;
 
     @Column(nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDate date;
 
     @Column(nullable = false)
     private int count;
@@ -48,8 +46,8 @@ public class ElectionEntity {
         return id;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDate getDate() {
+        return date;
     }
 
     public int getCount() {
@@ -60,8 +58,8 @@ public class ElectionEntity {
         this.eventId = eventId;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDateTime(LocalDate date) {
+        this.date = date;
     }
 
     public void setCount(int count) {
