@@ -12,7 +12,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -47,7 +46,7 @@ public class ElectionEntity {
         return id;
     }
 
-    public LocalDate getDateTime() {
+    public LocalDate getDate() {
         return date;
     }
 

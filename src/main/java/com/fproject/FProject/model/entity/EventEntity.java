@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Set;
@@ -28,7 +29,7 @@ public class EventEntity {
     private String name;
 
     @Column(nullable = false)
-    private String shareCode;
+    private String sharecode;
 
     @Column(nullable = false)
     private String description;
@@ -38,9 +39,6 @@ public class EventEntity {
 
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
     private Set<ElectionEntity> election;
-
-    @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
-    private Set<MemberEntity> members;
 
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
     private Set<CommentEntity> comments;
@@ -61,8 +59,8 @@ public class EventEntity {
         return name;
     }
 
-    public String getShareCode() {
-        return shareCode;
+    public String getSharecode() {
+        return sharecode;
     }
 
     public String getDescription() {
@@ -81,8 +79,8 @@ public class EventEntity {
         this.name = name;
     }
 
-    public void setShareCode(String shareCode) {
-        this.shareCode = shareCode;
+    public void setSharecode(String sharecode) {
+        this.sharecode = sharecode;
     }
 
     public void setDescription(String description) {
@@ -97,10 +95,6 @@ public class EventEntity {
 
     public Set<ElectionEntity> getElection() {
         return election;
-    }
-
-    public Set<MemberEntity> getMembers() {
-        return members;
     }
 
     public Set<CommentEntity> getComments() {

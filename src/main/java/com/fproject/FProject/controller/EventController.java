@@ -4,6 +4,7 @@ package com.fproject.FProject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,14 +23,33 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping
-    public ResponseEntity getMyEvents(@RequestHeader("JWT") String token) {
-        return eventService.getMyEvents(token);
+    @GetMapping("/{eventName}")
+    public ResponseEntity getEvent(@RequestHeader("JWT") String token, @PathVariable String eventName) {
+        return eventService.getEvent(token, eventName);
+    }
+    
+    @GetMapping("/oun-events")
+    public ResponseEntity getMyOunEvents(@RequestHeader("JWT") String token) {
+        return eventService.getMyOunEvents(token);
+    }
+
+    @GetMapping("/member-events")
+    public ResponseEntity getMyMemberEvents(@RequestHeader("JWT") String token) {
+        return eventService.getMyMemberEvents(token);
     }
 
     @PostMapping("/create")
-    public ResponseEntity createEvent(@RequestHeader("JWT") String token, @RequestBody EventDTO event) {
+    public ResponseEntity createEvent(
+        @RequestHeader("JWT") String token, 
+        @RequestBody EventDTO event) {
         return eventService.createEvent(token,event);
     }
 
+    @PostMapping("/join/{sharecode}")
+    public ResponseEntity joinEvent(
+        @PathVariable String sharecode,
+        @RequestHeader("JWT") String token) 
+        {
+        return eventService.joinEvent(token,sharecode);
+    }
 }

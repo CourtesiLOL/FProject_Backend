@@ -120,7 +120,7 @@ public class ImageService {
         EventEntity imgEvent = img.getEventId();
         UserEntity user = userRepo.findByEmail(jwtProvider.getUsername(token));
         
-        MemberEntity mem = memberRepo.findById(new MemberId(
+        MemberEntity mem = memberRepo.findByMemberId(new MemberId(
                 imgEvent.getId(),
                 user.getId()
         ));

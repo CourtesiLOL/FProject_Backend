@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Set;
 
@@ -29,10 +30,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<EventEntity> events;
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
-    private Set<MemberEntity> members;
-
+     
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private Set<CommentEntity> comments;
 
@@ -77,10 +75,6 @@ public class UserEntity {
 
     public Set<EventEntity> getEvents() {
         return events;
-    }
-
-    public Set<MemberEntity> getMembers() {
-        return members;
     }
 
     public Set<CommentEntity> getComments() {

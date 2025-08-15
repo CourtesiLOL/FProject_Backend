@@ -3,6 +3,6 @@ import java.util.Set;
 
 import java.time.LocalDate;
 
-public record EventDTO(String name, String description, Set<LocalDate> date) {
-
+public record EventDTO(String name, String description,Set<LocalDate> date) {
+    
 }
