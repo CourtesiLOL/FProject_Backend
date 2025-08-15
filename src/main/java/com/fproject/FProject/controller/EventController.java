@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fproject.FProject.model.dto.EventDTO;
+import com.fproject.FProject.model.entity.ElectionEntity;
 import com.fproject.FProject.service.EventService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -52,4 +53,22 @@ public class EventController {
         {
         return eventService.joinEvent(token,sharecode);
     }
+
+    @PostMapping("/vote-by-id")
+    public ResponseEntity voteElectionId(
+        @RequestHeader("JWT") String token,
+        @RequestBody long electionId
+        ) {
+        return eventService.voteElectionId(token,electionId);
+    }
+
+    //----------------
+    @PostMapping("/vote-by-election")
+    public ResponseEntity voteElection(
+        @RequestHeader("JWT") String token,
+        @RequestBody ElectionEntity election
+        ) {
+        return eventService.voteElection(token,election);
+    }
+    
 }

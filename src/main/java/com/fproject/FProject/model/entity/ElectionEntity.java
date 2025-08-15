@@ -34,8 +34,8 @@ public class ElectionEntity {
 
     // ----------------------------------------------
 
-    @OneToMany(mappedBy = "electionId", cascade = CascadeType.ALL)
-    private Set<VoteEntity> vote;
+    /*@OneToMany(mappedBy = "electionId", cascade = CascadeType.ALL)
+    private Set<VoteEntity> vote;*/
 
     // ----------------------------------------------
     public ElectionEntity() {

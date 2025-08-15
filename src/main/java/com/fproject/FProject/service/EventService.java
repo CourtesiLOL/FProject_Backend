@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.fproject.FProject.config.security.JwtTokenProvider;
 import com.fproject.FProject.model.MemberId;
+import com.fproject.FProject.model.VoteId;
 import com.fproject.FProject.model.dto.EventDTO;
 import com.fproject.FProject.model.dto.FullEventDTO;
 import com.fproject.FProject.model.dto.HomeEventDTO;
@@ -16,10 +17,12 @@ import com.fproject.FProject.model.dto.ImageDTO;
 import com.fproject.FProject.model.entity.ElectionEntity;
 import com.fproject.FProject.model.entity.EventEntity;
 import com.fproject.FProject.model.entity.UserEntity;
+import com.fproject.FProject.model.entity.VoteEntity;
 import com.fproject.FProject.repositorie.ElectionRepository;
 import com.fproject.FProject.repositorie.EventRepository;
 import com.fproject.FProject.repositorie.MemberRepository;
 import com.fproject.FProject.repositorie.UserRepository;
+import com.fproject.FProject.repositorie.VoteRespository;
 import com.fproject.FProject.model.entity.ImageEntity;
 import com.fproject.FProject.model.entity.MemberEntity;
 import java.time.LocalDate;
@@ -27,6 +30,7 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Value;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
 import static org.springframework.http.HttpStatus.CONFLICT;
 
 @Service
@@ -36,6 +40,7 @@ public class EventService {
     private final ElectionRepository electionRepository;
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
+    private final VoteRespository voteR;
     private final JwtTokenProvider jwt;
 
     @Value("${characters.for.code}")
@@ -47,13 +52,16 @@ public class EventService {
 
 
     public EventService(EventRepository eventRepository, ElectionRepository electionRepository,
-            UserRepository userRepository, MemberRepository memberRepository, JwtTokenProvider jwt) {
+            UserRepository userRepository, MemberRepository memberRepository,VoteRespository voteR, JwtTokenProvider jwt) {
         this.eventRepository = eventRepository;
         this.electionRepository = electionRepository;
         this.userRepository = userRepository;
         this.memberRepository = memberRepository;
+        this.voteR = voteR;
         this.jwt = jwt;
     }
+
+
 
     public ResponseEntity createEvent(String token, EventDTO event) {
 
@@ -197,8 +205,6 @@ public class EventService {
         return ResponseEntity.ok(null);
     }
 
-    
-    
     private final String generatorSC() {
 
         SecureRandom random = new SecureRandom();
@@ -209,4 +215,54 @@ public class EventService {
         }
         return codigo.toString();
     }
-}
+
+    // Votar una elecion de un evento
+    // Creara el VoteEntity y cambiara el count de election
+    public ResponseEntity voteElectionId(String token,long eId){
+        UserEntity user = userRepository.findByEmail(jwt.getUsername(token));
+
+        // La eleccion no existe
+        if (!electionRepository.findById(eId).isPresent()) {
+            return ResponseEntity.status(NOT_FOUND).body("ERROR: The election not exist");
+        }
+        
+        ElectionEntity election = electionRepository.findById(eId).get();
+        VoteId veId = new VoteId(user.getId(),election.getId());
+        VoteEntity ve = new VoteEntity();
+        ve.setVoteId(veId);
+
+        // Ya a votado para esa elecion
+        if (voteR.findById(veId).get().getVoteId() == ve.getVoteId()) {
+            return ResponseEntity.status(NOT_IMPLEMENTED).body("ERROR: You already voted");
+        }
+
+        voteR.save(ve);
+        election.setCount(voteR.countVoteInElection(election.getId()));
+        electionRepository.save(election);
+
+        return ResponseEntity.ok(null);
+    }
+
+    //----------------------------------------------------------
+    public ResponseEntity voteElection(String token,ElectionEntity election){
+        UserEntity user = userRepository.findByEmail(jwt.getUsername(token));
+
+        VoteId veId = new VoteId(user.getId(),election.getId());
+        VoteEntity ve = new VoteEntity();
+        ve.setVoteId(veId);
+
+        // Ya a votado para esa elecion
+        if (voteR.findById(veId).get().getVoteId() == ve.getVoteId()) {
+            return ResponseEntity.status(NOT_IMPLEMENTED).body("ERROR: You already voted");
+        }
+
+        voteR.save(ve);
+        election.setCount(voteR.countVoteInElection(election.getId()));
+        electionRepository.save(election);
+
+        return ResponseEntity.ok(null);
+    }
+
+
+} 
+

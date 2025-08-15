@@ -34,8 +34,8 @@ public class UserEntity {
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private Set<CommentEntity> comments;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
-    private Set<VoteEntity> vote;
+    /*@OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    private Set<VoteEntity> vote;*/
 
     public UserEntity() {
 
@@ -81,8 +81,8 @@ public class UserEntity {
         return comments;
     }
 
-    public Set<VoteEntity> getVote() {
+    /*public Set<VoteEntity> getVote() {
         return vote;
-    }
+    }*/
 
 }

@@ -3,9 +3,6 @@ package com.fproject.FProject.model.entity;
 import com.fproject.FProject.model.VoteId;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,16 +10,14 @@ import jakarta.persistence.Table;
 public class VoteEntity {
 
     @EmbeddedId
-    private VoteId id;
+    private VoteId voteId;
 
-    @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "userId", nullable = false)
-    private UserEntity userId;
-    
-    @ManyToOne
-    @MapsId("electionId")
-    @JoinColumn(name = "electionId", nullable = false)
-    private ElectionEntity electionId;
+    public VoteId getVoteId() {
+        return voteId;
+    }
+
+    public void setVoteId(VoteId voteId) {
+        this.voteId = voteId;
+    }
 
 }
