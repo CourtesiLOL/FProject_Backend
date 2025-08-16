@@ -61,8 +61,6 @@ public class EventService {
         this.jwt = jwt;
     }
 
-
-
     public ResponseEntity createEvent(String token, EventDTO event) {
 
         String mail = jwt.getUsername(token);
@@ -94,12 +92,39 @@ public class EventService {
         return ResponseEntity.ok(null);
     }
 
-    public ResponseEntity getEvent(String token, String eventName) {
+    public ResponseEntity getOunEvent(String token, String eventName) {
 
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);
 
         EventEntity event = eventRepository.findByOwnerAndName(user, eventName);
+        if (event == null) return ResponseEntity.status(NOT_FOUND).body(null);
+        
+        Set<ImageDTO> images = new LinkedHashSet();
+        for (ImageEntity e : event.getImages()) {
+            images.add(ImageDTO.ofEntity(e));
+        }
+        
+        var response = new FullEventDTO(
+                       event.getName(),
+                       event.getDescription(),
+                       images,
+                       event.getElection(),
+                       memberRepository.findAllByEventId(event.getId()),
+                       event.getSharecode()
+        );
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    public ResponseEntity getMemberEvent(String token, String eventName) {
+
+        String mail = jwt.getUsername(token);
+        UserEntity user = userRepository.findByEmail(mail);
+
+        //EventEntity event = eventRepository.findByOwnerAndName(user, eventName);
+        EventEntity event = eventRepository.findByName(eventName);
+        
         if (event == null) return ResponseEntity.status(NOT_FOUND).body(null);
         
         Set<ImageDTO> images = new LinkedHashSet();

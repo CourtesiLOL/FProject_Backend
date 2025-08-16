@@ -14,4 +14,5 @@ public interface EventRepository extends JpaRepository<EventEntity, Long>{
     EventEntity findByOwnerAndName(UserEntity owner, String name);
     //EventEntity findBySharecode(String sharecode);
     EventEntity findBySharecode(String sharecode);
+    EventEntity findByName(String name);
 }
