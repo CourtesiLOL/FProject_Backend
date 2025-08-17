@@ -55,12 +55,12 @@ public class EventController {
         return eventService.joinEvent(token,sharecode);
     }
 
-    @PostMapping("/vote-by-id")
+    @PostMapping("/vote-by-id/{id}")
     public ResponseEntity voteElectionId(
         @RequestHeader("JWT") String token,
-        @RequestBody long electionId
+        @PathVariable("id") long id
         ) {
-        return eventService.voteElectionId(token,electionId);
+        return eventService.voteElectionId(token,id);
     }
 
     //----------------
