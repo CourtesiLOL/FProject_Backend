@@ -26,6 +26,7 @@ import com.fproject.FProject.repositorie.VoteRespository;
 import com.fproject.FProject.model.entity.ImageEntity;
 import com.fproject.FProject.model.entity.MemberEntity;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -275,13 +276,17 @@ public class EventService {
         VoteId veId = new VoteId(user.getId(),election.getId());
 
         // Ya a votado para esa elecion
-        if (voteR.findById(veId).isPresent()) {
-            return ResponseEntity.status(NOT_IMPLEMENTED).body("ERROR: You already voted");
-        }
+        Optional<VoteEntity> ve = voteR.findById(veId);
         
-        VoteEntity ve = new VoteEntity();
-        ve.setVoteId(veId);
-        voteR.save(ve);
+        if (ve.isPresent()) {
+            voteR.deleteById(veId);
+            //return ResponseEntity.status(CONFLICT).body("ERROR: You already voted");
+        } else {  
+            var vote = new VoteEntity();
+            vote.setVoteId(veId);
+            
+            voteR.save(vote);
+        }
 
         
         election.setCount(voteR.countVoteInElection(election.getId()));
