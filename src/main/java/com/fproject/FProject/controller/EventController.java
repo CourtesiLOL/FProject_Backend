@@ -24,14 +24,10 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping("/oun-event/{eventName}")
-    public ResponseEntity getOunEvent(@RequestHeader("JWT") String token, @PathVariable String eventName) {
-        return eventService.getOunEvent(token, eventName);
-    }
-
-    @GetMapping("/member-event/{eventName}")
-    public ResponseEntity getMemberEvent(@RequestHeader("JWT") String token, @PathVariable String eventName) {
-        return eventService.getMemberEvent(token, eventName);
+    
+    @GetMapping("/{eventName}")
+    public ResponseEntity getEvent(@RequestHeader("JWT") String token, @PathVariable String eventName) {
+        return eventService.getEvent(token, eventName);
     }
     
     @GetMapping("/oun-events")

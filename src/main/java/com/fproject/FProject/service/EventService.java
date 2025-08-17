@@ -92,56 +92,20 @@ public class EventService {
         return ResponseEntity.ok(null);
     }
 
-    public ResponseEntity getOunEvent(String token, String eventName) {
-
+    public ResponseEntity getEvent(String token, String eventName) {
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);
-
-        EventEntity event = eventRepository.findByOwnerAndName(user, eventName);
-        if (event == null) return ResponseEntity.status(NOT_FOUND).body(null);
-        
-        Set<ImageDTO> images = new LinkedHashSet();
-        for (ImageEntity e : event.getImages()) {
-            images.add(ImageDTO.ofEntity(e));
-        }
-        
-        var response = new FullEventDTO(
-                       event.getName(),
-                       event.getDescription(),
-                       images,
-                       event.getElection(),
-                       memberRepository.findAllByEventId(event.getId()),
-                       event.getSharecode()
-        );
-        
-        return ResponseEntity.ok(response);
-    }
-    
-    public ResponseEntity getMemberEvent(String token, String eventName) {
-
-        String mail = jwt.getUsername(token);
-        UserEntity user = userRepository.findByEmail(mail);
-
-        //EventEntity event = eventRepository.findByOwnerAndName(user, eventName);
         EventEntity event = eventRepository.findByName(eventName);
         
-        if (event == null) return ResponseEntity.status(NOT_FOUND).body(null);
+        if (event.getOwner() == user.getId())
+            return ResponseEntity.ok(makeFullEventDto(event, true));
+
+        MemberEntity member = memberRepository.findByMemberId(new MemberId(event.getId(), user.getId()));
+        if (member != null) 
+            return ResponseEntity.ok(makeFullEventDto(event, false));
         
-        Set<ImageDTO> images = new LinkedHashSet();
-        for (ImageEntity e : event.getImages()) {
-            images.add(ImageDTO.ofEntity(e));
-        }
+        return ResponseEntity.status(NOT_FOUND).body("This event no exist");
         
-        var response = new FullEventDTO(
-                       event.getName(),
-                       event.getDescription(),
-                       images,
-                       event.getElection(),
-                       memberRepository.findAllByEventId(event.getId()),
-                       event.getSharecode()
-        );
-        
-        return ResponseEntity.ok(response);
     }
     
     public ResponseEntity getMyOunEvents(String token) {
@@ -230,17 +194,6 @@ public class EventService {
         return ResponseEntity.ok(null);
     }
 
-    private final String generatorSC() {
-
-        SecureRandom random = new SecureRandom();
-        StringBuilder codigo = new StringBuilder(maxLongSC);
-        for (int i = 0; i < maxLongSC; i++) {
-            int indice = random.nextInt(charactersSC.length());
-            codigo.append(charactersSC.charAt(indice));
-        }
-        return codigo.toString();
-    }
-
     // Votar una elecion de un evento
     // Creara el VoteEntity y cambiara el count de election
     public ResponseEntity voteElectionId(String token,long eId){
@@ -288,6 +241,34 @@ public class EventService {
         return ResponseEntity.ok(null);
     }
 
+    
+    
+    private FullEventDTO makeFullEventDto(EventEntity event, boolean owner) {
+        Set<ImageDTO> images = new LinkedHashSet();
+        for (ImageEntity e : event.getImages()) {
+            images.add(ImageDTO.ofEntity(e));
+        }
 
+        return new FullEventDTO(
+           event.getName(),
+           event.getDescription(),
+           images,
+           event.getElection(),
+           memberRepository.findAllByEventId(event.getId()),
+           owner ? event.getSharecode() : null
+        );
+
+    }
+    
+    private final String generatorSC() {
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder codigo = new StringBuilder(maxLongSC);
+        for (int i = 0; i < maxLongSC; i++) {
+            int indice = random.nextInt(charactersSC.length());
+            codigo.append(charactersSC.charAt(indice));
+        }
+        return codigo.toString();
+    }
 } 
 
