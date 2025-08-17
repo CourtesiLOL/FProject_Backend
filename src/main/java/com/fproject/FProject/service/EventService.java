@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 public class EventService {
@@ -133,7 +134,6 @@ public class EventService {
 
                 DTOs.add(DTO);
             }
-
             return ResponseEntity.ok(DTOs);
         }
         return ResponseEntity.status(NOT_FOUND).body(null);
@@ -197,31 +197,30 @@ public class EventService {
     // Votar una elecion de un evento
     // Creara el VoteEntity y cambiara el count de election
     public ResponseEntity voteElectionId(String token,long eId){
+        
         UserEntity user = userRepository.findByEmail(jwt.getUsername(token));
-
-        // La eleccion no existe
-        if (!electionRepository.findById(eId).isPresent()) {
+        ElectionEntity election = electionRepository.findById(eId).get();
+        
+        if (electionRepository.findById(eId).isEmpty()) {
             return ResponseEntity.status(NOT_FOUND).body("ERROR: The election not exist");
         }
-        
-        ElectionEntity election = electionRepository.findById(eId).get();
-        VoteId veId = new VoteId(user.getId(),election.getId());
-        VoteEntity ve = new VoteEntity();
-        ve.setVoteId(veId);
 
-        // Ya a votado para esa elecion
-        if (voteR.findById(veId).get().getVoteId() == ve.getVoteId()) {
-            return ResponseEntity.status(NOT_IMPLEMENTED).body("ERROR: You already voted");
+        var eventOp = eventRepository.findById(election.getEventId());
+        if (eventOp.isEmpty()) {
+            return ResponseEntity.status(NOT_FOUND).body("ERROR: This event not exist");
         }
+        EventEntity event = eventOp.get();
+        if (event.getOwner() == user.getId())
+            return vote(election, user);
 
-        voteR.save(ve);
-        election.setCount(voteR.countVoteInElection(election.getId()));
-        electionRepository.save(election);
-
-        return ResponseEntity.ok(null);
+        MemberEntity member = memberRepository.findByMemberId(new MemberId(event.getId(), user.getId()));
+        if (member != null) 
+            return vote(election, user);
+        
+        return ResponseEntity.status(UNAUTHORIZED).body("ERROR: Your not a member");
     }
 
-    //----------------------------------------------------------
+
     public ResponseEntity voteElection(String token,ElectionEntity election){
         UserEntity user = userRepository.findByEmail(jwt.getUsername(token));
 
@@ -269,6 +268,26 @@ public class EventService {
             codigo.append(charactersSC.charAt(indice));
         }
         return codigo.toString();
+    }
+    
+    private final ResponseEntity vote(ElectionEntity election, UserEntity user) {
+        
+        VoteId veId = new VoteId(user.getId(),election.getId());
+
+        // Ya a votado para esa elecion
+        if (voteR.findById(veId).isPresent()) {
+            return ResponseEntity.status(NOT_IMPLEMENTED).body("ERROR: You already voted");
+        }
+        
+        VoteEntity ve = new VoteEntity();
+        ve.setVoteId(veId);
+        voteR.save(ve);
+
+        
+        election.setCount(voteR.countVoteInElection(election.getId()));
+        electionRepository.save(election);
+        
+        return ResponseEntity.ok("Voted");
     }
 } 
 

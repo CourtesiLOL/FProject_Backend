@@ -53,6 +53,11 @@ public class ElectionEntity {
     public int getCount() {
         return count;
     }
+    
+    
+    public long getEventId() {
+        return eventId.getId();
+    }
 
     public void setEventId(EventEntity eventId) {
         this.eventId = eventId;

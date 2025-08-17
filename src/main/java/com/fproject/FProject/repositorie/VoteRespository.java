@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VoteRespository extends JpaRepository<VoteEntity, VoteId> {
-    
-    @Query("SELECT COUNT(*) FROM VoteEntity v WHERE v.voteId.electionId = :electionId")
+        
+    @Query("SELECT COUNT(v) FROM VoteEntity v WHERE v.voteId.electionId = :electionId")
     int countVoteInElection(@Param("electionId") Long electionId);
 }
