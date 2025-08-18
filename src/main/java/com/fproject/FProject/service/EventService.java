@@ -94,10 +94,15 @@ public class EventService {
         return ResponseEntity.ok(null);
     }
 
-    public ResponseEntity getEvent(String token, String eventName) {
+    public ResponseEntity getEvent(String token, long eventId) {
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);
-        EventEntity event = eventRepository.findByName(eventName);
+        Optional<EventEntity> eventOpt = eventRepository.findById(eventId);
+        
+        if (eventOpt.isEmpty()) 
+            return ResponseEntity.status(NOT_FOUND).body("This event not exist");
+        
+        var event = eventOpt.get();
         
         if (event.getOwner() == user.getId())
             return ResponseEntity.ok(makeFullEventDto(event, true));
@@ -126,13 +131,14 @@ public class EventService {
                     images.add(ImageDTO.ofEntity(e));
                 }
                 HomeEventDTO DTO = new HomeEventDTO(
+                        event.getId(),
                         event.getName(),
                         event.getDescription(),
                         images,
                         event.getElection(),
                         memberRepository.findAllByEventId(event.getId())
                         );
-
+                
                 DTOs.add(DTO);
             }
             return ResponseEntity.ok(DTOs);
@@ -159,6 +165,7 @@ public class EventService {
                     images.add(ImageDTO.ofEntity(e));
                 }
             DTOs.add(new HomeEventDTO(
+                event.getId(),
                 event.getName(),
                 event.getDescription(),
                 images,
@@ -195,8 +202,6 @@ public class EventService {
         return ResponseEntity.ok(null);
     }
 
-    // Votar una elecion de un evento
-    // Creara el VoteEntity y cambiara el count de election
     public ResponseEntity voteElectionId(String token,long eId){
         
         UserEntity user = userRepository.findByEmail(jwt.getUsername(token));
@@ -221,7 +226,6 @@ public class EventService {
         return ResponseEntity.status(UNAUTHORIZED).body("ERROR: Your not a member");
     }
 
-
     public ResponseEntity voteElection(String token,ElectionEntity election){
         UserEntity user = userRepository.findByEmail(jwt.getUsername(token));
 
@@ -240,8 +244,6 @@ public class EventService {
 
         return ResponseEntity.ok(null);
     }
-
-    
     
     private FullEventDTO makeFullEventDto(EventEntity event, boolean owner) {
         Set<ImageDTO> images = new LinkedHashSet();
@@ -250,6 +252,7 @@ public class EventService {
         }
 
         return new FullEventDTO(
+           event.getId(),
            event.getName(),
            event.getDescription(),
            images,

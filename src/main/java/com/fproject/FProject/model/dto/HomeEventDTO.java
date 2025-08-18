@@ -10,7 +10,7 @@ import com.fproject.FProject.model.entity.EventEntity;
 import com.fproject.FProject.model.entity.ImageEntity;
 import com.fproject.FProject.model.entity.MemberEntity;
 
-public record HomeEventDTO(String name,String description, Set<ImageDTO> images,
+public record HomeEventDTO(long id, String name,String description, Set<ImageDTO> images,
 Set<ElectionEntity> elections, Set<MemberEntity> members){
 
 }

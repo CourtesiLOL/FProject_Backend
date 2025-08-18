@@ -25,9 +25,9 @@ public class EventController {
     private EventService eventService;
 
     
-    @GetMapping("/{eventName}")
-    public ResponseEntity getEvent(@RequestHeader("JWT") String token, @PathVariable String eventName) {
-        return eventService.getEvent(token, eventName);
+    @GetMapping("/{eventId}")
+    public ResponseEntity getEvent(@RequestHeader("JWT") String token, @PathVariable long eventId) {
+        return eventService.getEvent(token, eventId);
     }
     
     @GetMapping("/oun-events")
