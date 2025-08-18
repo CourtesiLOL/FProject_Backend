@@ -91,7 +91,7 @@ public class EventService {
             electionRepository.save(electionNew);
         }
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(makeFullEventDto(eventNew, true));
     }
 
     public ResponseEntity getEvent(String token, long eventId) {
@@ -246,9 +246,13 @@ public class EventService {
     }
     
     private FullEventDTO makeFullEventDto(EventEntity event, boolean owner) {
+        
         Set<ImageDTO> images = new LinkedHashSet();
-        for (ImageEntity e : event.getImages()) {
-            images.add(ImageDTO.ofEntity(e));
+        var rawImg = event.getImages();
+        if (rawImg != null) {
+            for (ImageEntity e : event.getImages()) {
+                images.add(ImageDTO.ofEntity(e));
+            }
         }
 
         return new FullEventDTO(
