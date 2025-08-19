@@ -76,7 +76,7 @@ public class EventService {
         eventNew.setOwner(user);
         eventNew.setName(event.name());
         eventNew.setDescription(event.description());
-        eventNew.setSharecode(generatorSC(maxLongSC));
+        eventNew.setSharecode(generatorSC(maxLongSC, charactersSC));
         eventNew = eventRepository.save(eventNew);
 
         ElectionEntity electionNew;
@@ -94,6 +94,25 @@ public class EventService {
         return ResponseEntity.ok(makeFullEventDto(eventNew, true));
     }
 
+    public ResponseEntity delecteEvent(String token, long eventId) {
+        String mail = jwt.getUsername(token);
+        UserEntity user = userRepository.findByEmail(mail);
+        Optional<EventEntity> eventOpt = eventRepository.findById(eventId);
+        
+        if (eventOpt.isEmpty()) 
+            return ResponseEntity.status(NOT_FOUND).body("This event not exist");
+        
+        var event = eventOpt.get();
+        
+        if (event.getOwner() != user.getId())
+            return ResponseEntity.status(CONFLICT).body("Error: You are not the owner");
+        
+        //TO-DO fix drop member in database
+        
+        eventRepository.delete(event);
+        return ResponseEntity.ok(null);
+    }
+    
     public ResponseEntity getEvent(String token, long eventId) {
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);

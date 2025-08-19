@@ -15,6 +15,7 @@ import com.fproject.FProject.model.dto.EventDTO;
 import com.fproject.FProject.model.entity.ElectionEntity;
 import com.fproject.FProject.service.EventService;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 @CrossOrigin
@@ -45,6 +46,14 @@ public class EventController {
         @RequestHeader("JWT") String token, 
         @RequestBody EventDTO event) {
         return eventService.createEvent(token,event);
+    }
+    
+    @DeleteMapping("/delete/{eventId}")
+    public ResponseEntity deleteEvent(
+        @RequestHeader("JWT") String token, 
+        @PathVariable long eventId
+    ) {
+        return eventService.delecteEvent(token, eventId);
     }
 
     @PostMapping("/join/{sharecode}")
