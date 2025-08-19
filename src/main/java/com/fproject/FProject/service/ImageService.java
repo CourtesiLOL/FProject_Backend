@@ -1,5 +1,6 @@
 package com.fproject.FProject.service;
 
+import static com.fproject.FProject.Utils.generatorSC;
 import com.fproject.FProject.config.security.JwtTokenProvider;
 import com.fproject.FProject.model.MemberId;
 import com.fproject.FProject.model.entity.EventEntity;
@@ -86,6 +87,7 @@ public class ImageService {
             fileName.append(event.getName());
             fileName.append("-");
             fileName.append(count);
+            fileName.append(generatorSC(8));
             fileName.append(".webp");
             
             String imgName = fileName.toString();

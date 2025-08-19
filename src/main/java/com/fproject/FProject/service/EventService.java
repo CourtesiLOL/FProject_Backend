@@ -1,6 +1,6 @@
 package com.fproject.FProject.service;
 
-import java.security.SecureRandom;
+import static com.fproject.FProject.Utils.generatorSC;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -49,7 +49,7 @@ public class EventService {
     private String charactersSC;
 
     @Value("${shareCode.character.long}")
-    private byte maxLongSC;
+    private int maxLongSC;
 
 
 
@@ -76,7 +76,7 @@ public class EventService {
         eventNew.setOwner(user);
         eventNew.setName(event.name());
         eventNew.setDescription(event.description());
-        eventNew.setSharecode(generatorSC());
+        eventNew.setSharecode(generatorSC(maxLongSC));
         eventNew = eventRepository.save(eventNew);
 
         ElectionEntity electionNew;
@@ -265,17 +265,6 @@ public class EventService {
            owner ? event.getSharecode() : null
         );
 
-    }
-    
-    private final String generatorSC() {
-
-        SecureRandom random = new SecureRandom();
-        StringBuilder codigo = new StringBuilder(maxLongSC);
-        for (int i = 0; i < maxLongSC; i++) {
-            int indice = random.nextInt(charactersSC.length());
-            codigo.append(charactersSC.charAt(indice));
-        }
-        return codigo.toString();
     }
     
     private final ResponseEntity vote(ElectionEntity election, UserEntity user) {
