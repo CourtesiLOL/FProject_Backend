@@ -27,25 +27,13 @@ public class ImageController {
         this.imgService = imgService;
     }
     
-    @PostMapping("/{eventName}")
+    @PostMapping("/{eventId}")
     public ResponseEntity addImage(
-            @PathVariable String eventName, 
+            @PathVariable long eventId, 
             @RequestPart("imgFile") MultipartFile imgFile, 
             @RequestHeader("JWT") String token
-    ) {
-        
-        System.out.println("Info file");
-        System.out.println("---------");
-        System.out.println("Content Type: "+imgFile.getContentType());
-        System.out.println("Name: "+imgFile.getName());
-        System.out.println("Original File name: "+imgFile.getOriginalFilename());
-        System.out.println("filename: "+imgFile.getResource().getFilename());;
-        for (String x : imgFile.getOriginalFilename().split(".")) {
-            System.out.println(x);
-        }
-        
-        return imgService.addImage(eventName, imgFile, token);
-        
+    ) { 
+        return imgService.addImage(eventId, imgFile, token);
     }
        
     @GetMapping("/{imageName}")

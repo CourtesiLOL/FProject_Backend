@@ -57,13 +57,13 @@ public class ImageService {
         this.fileName = new StringBuilder();
     }
     
-    public ResponseEntity addImage(String eventName, MultipartFile file, String token) {
+    public ResponseEntity addImage(long eventId, MultipartFile file, String token) {
         
         if (!file.getContentType().equals("image/webp")) 
             return ResponseEntity.status(UNSUPPORTED_MEDIA_TYPE).body("ERROR: This format is not suported");
         
         UserEntity user = userRepo.findByEmail(jwtProvider.getUsername(token));
-        EventEntity event = eventRepo.findByOwnerAndName(user, eventName);
+        EventEntity event = eventRepo.findByOwnerAndId(user, eventId);
         if (event == null)
             return ResponseEntity.status(NOT_FOUND)
                     .body("ERROR: You have no event with that name");  
