@@ -18,13 +18,18 @@ import com.fproject.FProject.model.entity.ElectionEntity;
 import com.fproject.FProject.model.entity.EventEntity;
 import com.fproject.FProject.model.entity.UserEntity;
 import com.fproject.FProject.model.entity.VoteEntity;
-import com.fproject.FProject.repositorie.ElectionRepository;
-import com.fproject.FProject.repositorie.EventRepository;
-import com.fproject.FProject.repositorie.MemberRepository;
-import com.fproject.FProject.repositorie.UserRepository;
-import com.fproject.FProject.repositorie.VoteRespository;
+import com.fproject.FProject.repository.ElectionRepository;
+import com.fproject.FProject.repository.EventRepository;
+import com.fproject.FProject.repository.MemberRepository;
+import com.fproject.FProject.repository.UserRepository;
+import com.fproject.FProject.repository.VoteRespository;
 import com.fproject.FProject.model.entity.ImageEntity;
 import com.fproject.FProject.model.entity.MemberEntity;
+import jakarta.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -50,6 +55,9 @@ public class EventService {
 
     @Value("${shareCode.character.long}")
     private int maxLongSC;
+    
+    @Value("${updload-dir}")
+    private String uploadDir;
 
 
 
@@ -94,6 +102,7 @@ public class EventService {
         return ResponseEntity.ok(makeFullEventDto(eventNew, true));
     }
 
+    @Transactional
     public ResponseEntity delecteEvent(String token, long eventId) {
         String mail = jwt.getUsername(token);
         UserEntity user = userRepository.findByEmail(mail);
@@ -108,6 +117,8 @@ public class EventService {
             return ResponseEntity.status(CONFLICT).body("Error: You are not the owner");
         
         //TO-DO fix drop member in database
+        memberRepository.deleteAllByEventId(event.getId());
+        deleteImgList(event.getImages());
         
         eventRepository.delete(event);
         return ResponseEntity.ok(null);
@@ -308,6 +319,24 @@ public class EventService {
         electionRepository.save(election);
         
         return ResponseEntity.ok("Voted");
+    }
+    
+    private final void deleteImgList(Set<ImageEntity> imgs) {
+        try {
+            Path directory = Path.of(uploadDir);
+            if (!Files.exists(directory)) return;
+            
+            Path tempPath;
+            for (var img : imgs) {
+                tempPath = Path.of(directory + File.separator + img.getName());
+                
+                if (Files.exists(tempPath))
+                    Files.delete(tempPath);
+            }
+            
+        } catch(IOException ex) {
+            System.out.println("ERROR: Failed to delte images");
+        }
     }
 } 
 

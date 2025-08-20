@@ -1,4 +1,4 @@
-package com.fproject.FProject.repositorie;
+package com.fproject.FProject.repository;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;

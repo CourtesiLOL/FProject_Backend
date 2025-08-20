@@ -1,4 +1,4 @@
-package com.fproject.FProject.repositorie;
+package com.fproject.FProject.repository;
 
 import com.fproject.FProject.model.VoteId;
 import com.fproject.FProject.model.entity.VoteEntity;

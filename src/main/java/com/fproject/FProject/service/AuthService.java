@@ -6,7 +6,7 @@ import com.fproject.FProject.model.dto.JwtDTO;
 import com.fproject.FProject.model.dto.requestBody.LoginUser;
 import com.fproject.FProject.model.dto.requestBody.RegisterUser;
 import com.fproject.FProject.model.entity.UserEntity;
-import com.fproject.FProject.repositorie.UserRepository;
+import com.fproject.FProject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import static org.springframework.http.HttpStatus.*;

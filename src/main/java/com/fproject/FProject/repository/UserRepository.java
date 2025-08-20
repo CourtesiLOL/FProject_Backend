@@ -1,4 +1,4 @@
-package com.fproject.FProject.repositorie;
+package com.fproject.FProject.repository;
 
 import com.fproject.FProject.model.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.fproject.FProject.repositorie;
+package com.fproject.FProject.repository;
 
 import com.fproject.FProject.model.entity.EventEntity;
 import com.fproject.FProject.model.entity.ImageEntity;

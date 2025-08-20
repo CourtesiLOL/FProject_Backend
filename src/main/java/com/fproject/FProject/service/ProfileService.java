@@ -3,7 +3,7 @@ package com.fproject.FProject.service;
 import com.fproject.FProject.config.security.JwtTokenProvider;
 import com.fproject.FProject.model.dto.UserDTO;
 import com.fproject.FProject.model.entity.UserEntity;
-import com.fproject.FProject.repositorie.UserRepository;
+import com.fproject.FProject.repository.UserRepository;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import org.springframework.http.ResponseEntity;
